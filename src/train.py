@@ -1,44 +1,63 @@
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
-from .data_processing import load_data
-from .feature_engineering import create_features
-from .evaluate import evaluate_model
+from src.data_processing import load_data
+from src.feature_engineering import create_features
+from src.evaluate import evaluate_model
+from src.config import load_config
+from src.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 
 def main():
 
-    print("Loading data...")
+    logger.info("Starting ML training pipeline")
+
+    config = load_config()
+
+    logger.info("Loading dataset")
 
     X, y = load_data()
 
-    print("Dataset shape:", X.shape)
+    logger.info(
+        f"Dataset shape: {X.shape}"
+    )
+
+    test_size = config["data"]["test_size"]
+    random_state = config["data"]["random_state"]
 
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
-        test_size=0.2,
-        random_state=42,
+        test_size=test_size,
+        random_state=random_state,
         stratify=y
     )
 
-    print("Creating features...")
+    logger.info("Creating features")
 
     X_train, X_test, scaler = create_features(
         X_train,
         X_test
     )
 
-    print("Training model...")
+    n_estimators = config["model"]["n_estimators"]
+
+    logger.info(
+        f"Training Random Forest with "
+        f"{n_estimators} trees"
+    )
 
     model = RandomForestClassifier(
-        n_estimators=100,
-        random_state=42
+        n_estimators=n_estimators,
+        random_state=random_state
     )
 
     model.fit(X_train, y_train)
 
-    print("Evaluating model...")
+    logger.info("Model training completed")
 
     metrics = evaluate_model(
         model,
@@ -46,11 +65,11 @@ def main():
         y_test
     )
 
-    print("\nModel Metrics:")
+    logger.info("Model evaluation completed")
 
     for name, value in metrics.items():
 
-        print(
+        logger.info(
             f"{name}: {value:.4f}"
         )
 
