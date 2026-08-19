@@ -12,6 +12,7 @@ from src.config import load_config
 from src.logger import get_logger
 from src.model_utils import save_model
 from src.model import create_model
+import time
 
 
 Path("models").mkdir(parents=True, exist_ok=True)
@@ -46,6 +47,16 @@ def main():
     logger.info("Loading dataset")
 
     X, y = load_data()
+
+    mlflow.log_param(
+    "dataset_rows",
+    X.shape[0]
+)
+
+    mlflow.log_param(
+        "dataset_features",
+        X.shape[1]
+    )
 
     logger.info(
         f"Dataset shape: {X.shape}"
@@ -95,7 +106,7 @@ def main():
     # --------------------------------
     # MLflow run
     # --------------------------------
-
+    start_time = time.time()
     with mlflow.start_run() if mlflow_uri else nullcontext():
 
         if mlflow_uri:
@@ -148,12 +159,16 @@ def main():
                 f"{name}: {value:.4f}"
             )
 
-            if mlflow_uri:
-                mlflow.log_metric(
-                    name,
-                    value
-                )
-
+        if mlflow_uri:
+            mlflow.log_metric(
+                name,
+                value
+            )
+        training_time = time.time() - start_time
+        mlflow.log_metric(
+            "training_time_seconds",
+            training_time
+        )
         # --------------------------------
         # Save model
         # --------------------------------
