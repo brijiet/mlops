@@ -7,6 +7,7 @@ from src.evaluate import evaluate_model
 from src.config import load_config
 from src.logger import get_logger
 from src.model_utils import save_model
+from src.model import create_model
 
 
 logger = get_logger(__name__)
@@ -51,10 +52,10 @@ def main():
         f"{n_estimators} trees"
     )
 
-    model = RandomForestClassifier(
+    model = create_model(
         n_estimators=n_estimators,
         random_state=random_state
-    )
+)
 
     model.fit(X_train, y_train)
 

@@ -7,6 +7,7 @@ from sklearn.metrics import (
     accuracy_score,
 )
 from src.model_utils import load_model
+from src.model import create_model
 
 
 def test_model_accuracy():
@@ -48,3 +49,14 @@ def test_saved_model():
 
     assert model is not None
     assert scaler is not None
+
+def test_create_model():
+
+    model = create_model(
+        n_estimators=10,
+        random_state=42
+    )
+
+    assert model is not None
+    assert model.n_estimators == 10
+    assert model.random_state == 42
