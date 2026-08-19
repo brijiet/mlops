@@ -58,5 +58,8 @@ def test_create_model():
     )
 
     assert model is not None
-    assert model.n_estimators == 10
-    assert model.random_state == 42
+
+    random_forest = model.named_steps["classifier"]
+
+    assert random_forest.n_estimators == 10
+    assert random_forest.random_state == 42
