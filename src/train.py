@@ -6,6 +6,7 @@ from src.feature_engineering import create_features
 from src.evaluate import evaluate_model
 from src.config import load_config
 from src.logger import get_logger
+from src.model_utils import save_model
 
 
 logger = get_logger(__name__)
@@ -72,6 +73,15 @@ def main():
         logger.info(
             f"{name}: {value:.4f}"
         )
+
+    logger.info("Saving model")
+
+    save_model(
+        model,
+        scaler
+    )
+
+    logger.info("Model saved successfully")
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ from src.feature_engineering import create_features
 from sklearn.metrics import (
     accuracy_score,
 )
+from src.model_utils import load_model
 
 
 def test_model_accuracy():
@@ -40,3 +41,10 @@ def test_model_accuracy():
     )
 
     assert accuracy >= 0.80
+
+def test_saved_model():
+
+    model, scaler = load_model()
+
+    assert model is not None
+    assert scaler is not None
