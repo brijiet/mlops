@@ -1,27 +1,35 @@
-import pandas as pd
-from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+
+from .data_processing import load_data
+from .feature_engineering import create_features
+from .evaluate import evaluate_model
 
 
 def main():
 
-    data = load_breast_cancer()
+    print("Loading data...")
 
-    X = pd.DataFrame(
-        data.data,
-        columns=data.feature_names
-    )
+    X, y = load_data()
 
-    y = data.target
+    print("Dataset shape:", X.shape)
 
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
         test_size=0.2,
-        random_state=42
+        random_state=42,
+        stratify=y
     )
+
+    print("Creating features...")
+
+    X_train, X_test, scaler = create_features(
+        X_train,
+        X_test
+    )
+
+    print("Training model...")
 
     model = RandomForestClassifier(
         n_estimators=100,
@@ -30,14 +38,21 @@ def main():
 
     model.fit(X_train, y_train)
 
-    predictions = model.predict(X_test)
+    print("Evaluating model...")
 
-    accuracy = accuracy_score(
-        y_test,
-        predictions
+    metrics = evaluate_model(
+        model,
+        X_test,
+        y_test
     )
 
-    print("Model Accuracy:", accuracy)
+    print("\nModel Metrics:")
+
+    for name, value in metrics.items():
+
+        print(
+            f"{name}: {value:.4f}"
+        )
 
 
 if __name__ == "__main__":
