@@ -21,13 +21,7 @@ def save_model(model, scaler):
 
 
 def load_model():
-
-    model = joblib.load(
-        MODEL_DIR / "model.pkl"
-    )
-
-    scaler = joblib.load(
-        MODEL_DIR / "scaler.pkl"
-    )
+    model = joblib.load("models/model.pkl")
+    scaler = joblib.load("models/scaler.pkl")
 
     return model, scaler

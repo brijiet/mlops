@@ -8,6 +8,11 @@ from src.config import load_config
 from src.logger import get_logger
 from src.model_utils import save_model
 from src.model import create_model
+from pathlib import Path
+import joblib
+
+Path("models").mkdir(exist_ok=True)
+
 
 
 logger = get_logger(__name__)
@@ -60,6 +65,8 @@ def main():
     model.fit(X_train, y_train)
 
     logger.info("Model training completed")
+    joblib.dump(model, "models/model.pkl")
+    joblib.dump(scaler, "models/scaler.pkl")
 
     metrics = evaluate_model(
         model,
