@@ -1,8 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from api.model_service import load_model
-
+from api.model_service import (
+    MODEL_NAME,
+    MODEL_ALIAS,
+    load_model
+)
 
 app = FastAPI(
     title="Customer Churn Prediction API",
@@ -46,11 +49,26 @@ def health():
 
     return {
         "status": "healthy",
-        "model": "CustomerChurnModel",
-        "alias": "champion",
+        "model": MODEL_NAME,
+        "alias": MODEL_ALIAS,
         "model_status": model_status
     }
 
+@app.get("/ready")
+def ready():
+
+    if model is None:
+
+        raise HTTPException(
+            status_code=503,
+            detail="Model is not loaded"
+        )
+
+    return {
+        "status": "ready",
+        "model": MODEL_NAME,
+        "alias": MODEL_ALIAS
+    }
 
 @app.post("/predict",response_model=PredictionResponse)
 def predict(

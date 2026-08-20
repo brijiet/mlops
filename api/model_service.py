@@ -7,9 +7,15 @@ TRACKING_URI = os.getenv(
     "http://127.0.0.1:5000"
 )
 
-MODEL_NAME = "CustomerChurnModel"
+MODEL_NAME = os.getenv(
+    "MODEL_NAME",
+    "CustomerChurnModel"
+)
 
-MODEL_ALIAS = "champion"
+MODEL_ALIAS = os.getenv(
+    "MODEL_ALIAS",
+    "champion"
+)
 
 
 def load_model():

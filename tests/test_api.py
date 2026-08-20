@@ -18,6 +18,17 @@ def test_health():
 
     assert data["status"] == "healthy"
 
+def test_ready():
+
+    response = client.get(
+        "/ready"
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["status"] == "ready"
 
 def test_invalid_prediction():
 

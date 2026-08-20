@@ -7,7 +7,15 @@ TRACKING_URI = os.getenv(
     "http://127.0.0.1:5000"
 )
 
-MODEL_NAME = "CustomerChurnModel"
+MODEL_NAME = os.getenv(
+    "MODEL_NAME",
+    "CustomerChurnModel"
+)
+
+MODEL_ALIAS = os.getenv(
+    "MODEL_ALIAS",
+    "champion"
+)
 
 
 def load_champion_model():
@@ -17,11 +25,9 @@ def load_champion_model():
     )
 
     model_uri = (
-        f"models:/{MODEL_NAME}@champion"
+        f"models:/{MODEL_NAME}@{MODEL_ALIAS}"
     )
 
-    model = mlflow.sklearn.load_model(
+    return mlflow.sklearn.load_model(
         model_uri
     )
-
-    return model
