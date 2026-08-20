@@ -17,3 +17,15 @@ def test_health():
     data = response.json()
 
     assert data["status"] == "healthy"
+
+
+def test_invalid_prediction():
+
+    response = client.post(
+        "/predict",
+        json={
+            "features": [1, 2, 3]
+        }
+    )
+
+    assert response.status_code == 422
